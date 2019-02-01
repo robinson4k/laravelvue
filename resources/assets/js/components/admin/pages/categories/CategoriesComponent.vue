@@ -1,5 +1,7 @@
 <template>
     <div>
+        <h1>Listagem das categorias</h1>
+        <router-link :to="{name: 'admin.categories.create'}" class="btn btn-success">Cadastrar</router-link>
         <table class="table table-dark">
             <thead>
                 <th>ID</th>
@@ -10,7 +12,9 @@
                 <tr v-for="(category, index) in categories.data" :key="index">
                     <td>{{ category.id }}</td>
                     <td v-text="category.name"></td>
-                    <td></td>
+                    <td>
+                        <router-link :to="{name: 'admin.categories.edit', params: {id: category.id}}" class="btn btn-info">Editar</router-link>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -21,26 +25,11 @@ import axios from 'axios'
 
 export default {
     created () {
-        this.loadCategories()
+        this.$store.dispatch('loadCategories')
     },
-    data () {
-        return {
-            categories: {
-                data: []
-            },
-        }
-    },
-    methods: {
-        loadCategories () {
-            axios.get('/api/v1/categories')
-            .then(response => {
-                console.log(response)
-
-                this.categories = response
-            })
-            .catch(errors => {
-                console.log(errors)
-            })
+    computed: {
+        categories () {
+            return this.$store.state.categories.items
         }
     }
 }
