@@ -17,20 +17,27 @@ export default {
     },
     // quando o componente é chamado, executa este metodo
     created () {
-        this.$store.dispatch('loadCategory', this.id)
-        .then(response => {
-            this.category = response
-            console.log(response)
-        })
-        .catch(error => {
-            console.log(error)
-        })
+        this.loadCategory()
     },
     data () {
         return {
             category: {
                 name: ''
             }
+        }
+    },
+    methods: {
+        loadCategory () {
+            this.$store.dispatch('loadCategory', this.id)
+            .then(response => {
+                this.category = response
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+                this.$snotify.error('Categoria não encontrada', '404')
+                this.$router.push({name: 'admin.categories'})
+            })
         }
     },
     components: {
